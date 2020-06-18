@@ -33,6 +33,7 @@ async function answerInlineQuery(inline_query_id, results) {
       body: JSON.stringify({
         inline_query_id,
         results,
+        cache_time: 600,
       }),
     }
   ).then((x) => x.json());
@@ -64,6 +65,14 @@ async function handleMessage(message) {
   const results = await searchSong(keyword);
 }
 
+function lp(str, len) {
+  str = String(str);
+  for (let i = 0; i < len - str.length; i++) {
+    str = "0" + str;
+  }
+  return str;
+}
+
 async function handleInline(inlineQuery) {
   const text = String(inlineQuery.query) || "";
   const results = await searchSong(text);
@@ -82,6 +91,13 @@ async function handleInline(inlineQuery) {
     });
   } else {
     for (const i of results.slice(0, 15)) {
+      let dateTime = new Date(i.datetime);
+      let dtStr = `${dateTime.getFullYear()}/${
+        dateTime.getMonth() + 1
+      }/${dateTime.getDate()} ${lp(dateTime.getHours(), 2)}:${lp(
+        dateTime.getMinutes(),
+        2
+      )}`;
       let isSuiseiOriginal = (i.artist || "").includes("星街すいせい");
       let ifFeat = isSuiseiOriginal ? "" : " (ft. 星街すいせい)";
       let artistFeat = `${i.artist}${ifFeat}`;
@@ -89,9 +105,9 @@ async function handleInline(inlineQuery) {
         type: "audio",
         id: rand(),
         audio_url: i.url,
-        title: `${i.title} (${i.date})`,
+        title: `${i.title} (${dtStr})`,
         performer: artistFeat,
-        caption: `${i.artist} - ${i.title}${ifFeat}`,
+        caption: `${i.artist} - ${i.title}${ifFeat} (${dtStr})`,
       });
     }
   }
