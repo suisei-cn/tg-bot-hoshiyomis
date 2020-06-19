@@ -99,7 +99,7 @@ async function handleInline(inlineQuery) {
         2
       )}`;
       let isSuiseiOriginal = (i.artist || "").includes("星街すいせい");
-      let ifFeat = isSuiseiOriginal ? "" : " (ft. 星街すいせい)";
+      let ifFeat = isSuiseiOriginal ? "" : ` (ft. ${i.performer})`;
       let artistFeat = `${i.artist}${ifFeat}`;
       ret.push({
         type: "audio",
