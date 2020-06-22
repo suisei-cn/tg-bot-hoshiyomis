@@ -92,10 +92,12 @@ async function handleInline(inlineQuery) {
   } else {
     for (const i of results.slice(0, 15)) {
       let dateTime = new Date(i.datetime);
-      let dtStr = `${dateTime.getFullYear()}/${
-        dateTime.getMonth() + 1
-      }/${dateTime.getDate()} ${lp(dateTime.getHours(), 2)}:${lp(
-        dateTime.getMinutes(),
+      dateTime.setHours(dateTime.getHours() + 8);
+
+      let dtStr = `${dateTime.getUTCFullYear()}/${
+        dateTime.getUTCMonth() + 1
+      }/${dateTime.getUTCDate()} ${lp(dateTime.getUTCHours(), 2)}:${lp(
+        dateTime.getUTCMinutes(),
         2
       )}`;
       let isSuiseiOriginal = (i.artist || "").includes("星街すいせい");
