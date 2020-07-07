@@ -51,7 +51,7 @@ async function searchSong(text) {
       return [];
     });
   text = text.toLowerCase();
-  return music_list.filter(
+  return music_list.reverse().filter(
     (x) =>
       (x.title || "").toLowerCase().includes(text) ||
       (x.artist || "").toLowerCase().includes(text)
