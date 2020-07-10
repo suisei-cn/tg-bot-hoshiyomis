@@ -3,7 +3,8 @@ addEventListener("fetch", (event) => {
 });
 
 const BOT_KEY = "BOT_KEY";
-const BASEURL = "SUISEI_MUSIC_WORKER_DOMAIN";
+const BASEURL = "BOT_WORKER_DOMAIN";
+const METAURL = "SUISEI_MUSIC_WORKER_DOMAIN";
 const { toRomaji } = require("wanakana");
 
 function rand() {
@@ -46,7 +47,7 @@ async function answerInlineQuery(inline_query_id, results) {
  * @returns {Object[]}
  */
 async function searchSong(text) {
-  const music_list = await fetch(BASEURL)
+  const music_list = await fetch(METAURL)
     .then((x) => x.json())
     .catch(() => {
       return [];
