@@ -1,0 +1,12 @@
+{
+  "private": true,
+  "name": "hosymbot",
+  "version": "1.0.0",
+  "description": "Telegram bots for Hoshiyomis.",
+  "main": "index.js",
+  "author": "Outvi V <oss+npm@outv.im>",
+  "license": "MIT",
+  "dependencies": {
+    "wanakana": "^4.0.2"
+  }
+}
