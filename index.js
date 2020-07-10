@@ -4,6 +4,7 @@ addEventListener("fetch", (event) => {
 
 const BOT_KEY = "BOT_KEY";
 const BASEURL = "SUISEI_MUSIC_WORKER_DOMAIN";
+const { toRomaji } = require("wanakana");
 
 function rand() {
   return String(Math.random()) + String(Math.random());
@@ -54,7 +55,13 @@ async function searchSong(text) {
   return music_list.reverse().filter(
     (x) =>
       (x.title || "").toLowerCase().includes(text) ||
-      (x.artist || "").toLowerCase().includes(text)
+      (x.artist || "").toLowerCase().includes(text) ||
+      toRomaji(x.title || "")
+        .toLowerCase()
+        .includes(toRomaji(text)) ||
+      toRomaji(x.artist || "")
+        .toLowerCase()
+        .includes(toRomaji(text))
   );
 }
 
