@@ -82,46 +82,57 @@ function lp(str, len) {
 }
 
 async function handleInline(inlineQuery) {
-  const text = String(inlineQuery.query) || "";
-  const results = await searchSong(text);
-  const ret = [];
+  const text = String(inlineQuery.query) || ''
+  const results = await searchSong(text)
+  const ret = []
   if (results.length === 0) {
     ret.push({
-      type: "article",
+      type: 'article',
       id: rand(),
       title: `No results for "${text}".`,
       input_message_content: {
         message_text: `No results for "${text}". Send PR [here](https://github.com/suisei-cn/suisei-music) for any missing results.`,
-        parse_mode: "Markdown",
+        parse_mode: 'Markdown',
         disable_web_page_preview: true,
       },
-      url: "https://github.com/suisei-cn/suisei-music",
-    });
+      url: 'https://github.com/suisei-cn/suisei-music',
+    })
   } else {
     for (const i of results.slice(0, 15)) {
-      let dateTime = new Date(i.datetime);
-      dateTime.setHours(dateTime.getHours() + 8);
+      let dateTime = new Date(i.datetime)
+      dateTime.setHours(dateTime.getHours() + 8)
 
       let dtStr = `${dateTime.getUTCFullYear()}/${
         dateTime.getUTCMonth() + 1
       }/${dateTime.getUTCDate()} ${lp(dateTime.getUTCHours(), 2)}:${lp(
         dateTime.getUTCMinutes(),
         2
-      )}`;
-      let isSuiseiOriginal = (i.artist || "").includes("星街すいせい");
-      let ifFeat = isSuiseiOriginal ? "" : ` (ft. ${i.performer})`;
-      let artistFeat = `${i.artist}${ifFeat}`;
+      )}`
+
+      /*
+      Case 1:  isSuiseiOriginal, isOriginal  | Suisei original, use 星街すいせい - {title}
+      Case 2: !isSuiseiOriginal, isOriginal  | Original, suisei with others, use {performers} - {title}
+      Case 3: !isSuiseiOriginal, !isOriginal | Feat only, use {original} - {title} (feat. {performers})
+      */
+      let isSuiseiOriginal = (i.artist || '').includes('星街すいせい')
+      let isOriginal = isSuiseiOriginal || i.artist === ''
       ret.push({
-        type: "audio",
+        type: 'audio',
         id: rand(),
         audio_url: i.url,
         title: `${i.title} (${dtStr})`,
-        performer: artistFeat,
-        caption: `${i.artist} - ${i.title}${ifFeat} (${dtStr})`,
-      });
+        performer: isOriginal
+          ? i.performer
+          : `${i.artist} (feat. ${i.performer})`,
+        caption:
+          (isOriginal
+            ? `${i.performer} - ${i.title}`
+            : `${i.artist} - ${i.title} (feat. ${i.performer})`) +
+          ` (${dtStr})`,
+      })
     }
   }
-  await answerInlineQuery(inlineQuery.id, ret);
+  await answerInlineQuery(inlineQuery.id, ret)
 }
 
 async function handler(request) {
