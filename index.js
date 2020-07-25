@@ -67,7 +67,7 @@ async function searchSong(text) {
 }
 
 async function handleMessage(message) {
-  const text = String(message.text) || "";
+  const text = String(message.text || "");
   if (!text.includes("/music")) return;
   const keyword = text.replace(/^\/music(@hosymbot)?/, "");
   const results = await searchSong(keyword);
@@ -82,7 +82,7 @@ function lp(str, len) {
 }
 
 async function handleInline(inlineQuery) {
-  const text = String(inlineQuery.query) || ''
+  const text = String(inlineQuery.query || '')
   const results = await searchSong(text)
   const ret = []
   if (results.length === 0) {
