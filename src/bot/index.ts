@@ -3,6 +3,7 @@ import { TelegrafContext } from 'telegraf/typings/context'
 import secret from '../secrets'
 import inlineQueryHandler from '~modules/inline'
 import searchHandler from '~modules/search'
+import callbackQueryHandler from '~modules/callback'
 
 const bot = new Telegraf(secret.botToken)
 
@@ -17,12 +18,6 @@ bot.on('inline_query', inlineQueryHandler)
 
 bot.command('search', searchHandler)
 
-// bot.on('callback_query', ctx => {
-//   // Explicit usage
-//   ctx.telegram.answerCbQuery(ctx.callbackQuery.id)
-
-//   // Using context shortcut
-//   ctx.answerCbQuery()
-// })
+bot.on('callback_query', callbackQueryHandler)
 
 export default bot

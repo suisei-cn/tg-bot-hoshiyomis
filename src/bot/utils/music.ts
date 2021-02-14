@@ -1,13 +1,18 @@
 import secrets from 'src/secrets'
 import { toRomaji } from 'wanakana'
 import { MusicInfo } from 'src/types'
+import { getHashByUrl } from './string'
 
-export async function searchMusic(text: string) {
-  const music_list: MusicInfo[] = await fetch(secrets.metaUrl)
+async function getMusic(): Promise<MusicInfo[]> {
+  return await fetch(secrets.metaUrl)
     .then(x => x.json())
     .catch(() => {
       return []
     })
+}
+
+export async function searchMusic(text: string): Promise<MusicInfo[]> {
+  const music_list = await getMusic()
   text = text.toLowerCase()
   return music_list.reverse().filter(
     x =>
@@ -20,4 +25,12 @@ export async function searchMusic(text: string) {
         .toLowerCase()
         .includes(toRomaji(text))
   )
+}
+
+export async function queryMusicByHash(
+  hash: string
+): Promise<MusicInfo | null> {
+  const music_list = await getMusic()
+  const results = music_list.reverse().filter(x => getHashByUrl(x.url) === hash)
+  return results.length ? results[0] : null
 }

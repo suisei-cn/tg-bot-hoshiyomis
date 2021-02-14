@@ -9,12 +9,16 @@ export function getGeneralNotFoundMessage(query: string): string {
   return `No results for "${query}".\nSend a issue [here](https://github.com/suisei-cn/suisei-music) if you think there's something wrong.`
 }
 
-export function getFilenameFromUrl(url: URL): string {
+function getFilenameFromUrl(url: URL): string {
   const path = url.pathname.split('/')
   return path[path.length - 1]
 }
 
-export function getNameFromFilename(name: string): string {
+function getNameFromFilename(name: string): string {
   const nameComponent = name.split('.')
   return nameComponent.slice(0, nameComponent.length - 1).join('.')
+}
+
+export function getHashByUrl(url: string): string {
+  return getNameFromFilename(getFilenameFromUrl(new URL(url)))
 }
