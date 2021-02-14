@@ -10,7 +10,8 @@
     "baseUrl": ".",
     "paths": {
       "*": ["node_modules/*"],
-      "src/*": ["src/*"]
+      "src/*": ["src/*"],
+      "~*": ["src/bot/*"]
     },
     "strict": true,
     "strictNullChecks": true,
