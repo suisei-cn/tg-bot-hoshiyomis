@@ -12,7 +12,11 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Install and check 🔍
-        run: npm ci
+      - name: Pre-build preparations 🔍
+        run: |
+          npm ci
+          mv src/secrets.sample.ts src/secrets.ts
+          mv wrangler.sample.toml wrangler.toml
+
       - name: Build 🔧
         run: npm run build
