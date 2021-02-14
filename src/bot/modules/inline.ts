@@ -6,6 +6,7 @@ import {
 import { musicToAudioMeta } from '~utils/convert'
 import { rand } from '~utils/math'
 import { searchMusic } from '~utils/music'
+import { getGeneralNotFoundMessage } from '~utils/string'
 
 export default async (ctx: TelegrafContext) => {
   const inlineQuery = ctx.inlineQuery as InlineQuery
@@ -18,13 +19,14 @@ export default async (ctx: TelegrafContext) => {
         id: rand(),
         title: `No results for "${query}".`,
         input_message_content: {
-          message_text: `No results for "${query}". Send a issue [here](https://github.com/suisei-cn/suisei-music) if you think there's something wrong.`,
+          message_text: getGeneralNotFoundMessage(query),
           parse_mode: 'Markdown',
           disable_web_page_preview: true,
         },
         url: 'https://github.com/suisei-cn/suisei-music',
       },
     ])
+    return
   }
 
   const result: InlineQueryResultAudio[] = results.slice(0, 15).map(x => {

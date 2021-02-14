@@ -9,6 +9,7 @@ export interface MusicInfo {
 }
 
 export interface AudioMeta {
+  hash: string
   title: string
   performer: string
   caption: string

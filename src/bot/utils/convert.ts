@@ -1,5 +1,5 @@
 import { AudioMeta, MusicInfo } from 'src/types'
-import { leftpad } from './string'
+import { getFilenameFromUrl, getNameFromFilename, leftpad } from './string'
 
 export function musicToAudioMeta(i: MusicInfo): AudioMeta {
   let dateTime = new Date(i.datetime)
@@ -20,8 +20,8 @@ export function musicToAudioMeta(i: MusicInfo): AudioMeta {
     **/
   let isSuiseiOriginal = (i.artist || '').includes('星街すいせい')
   let isOriginal = isSuiseiOriginal || i.artist === ''
-  let rnd = Number(new Date())
   return {
+    hash: getNameFromFilename(getFilenameFromUrl(new URL(i.url))),
     title: `${i.title} (${dtStr})`,
     performer: isOriginal ? i.performer : `${i.artist} (feat. ${i.performer})`,
     caption:
