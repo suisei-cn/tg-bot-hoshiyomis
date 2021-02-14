@@ -1,4 +1,6 @@
-# Hoshiyomis!
+This is the source code of Hoshiyomis! v1. To see the latest code, see the [`master`](https://github.com/suisei-cn/tg-bot-hoshiyomis/tree/master) branch.
+
+# Hoshiyomis! (v1)
 
 [![](https://img.shields.io/badge/Telegram-%40hosymbot-blue.svg)](https://t.me/hosymbot)
 
