@@ -6,7 +6,7 @@ export function leftpad(str: string, len: number): string {
 }
 
 export function getGeneralNotFoundMessage(query: string): string {
-  return `No results for "${query}".\nSend a issue [here](https://github.com/suisei-cn/suisei-music) if you think there's something wrong.`
+  return `No results for "${query}".\nSend a issue <a href="https://github.com/suisei-cn/suisei-music">here</a> if you think there's something wrong.`
 }
 
 function getFilenameFromUrl(url: URL): string {

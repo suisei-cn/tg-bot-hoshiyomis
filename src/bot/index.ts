@@ -8,7 +8,13 @@ import callbackQueryHandler from '~modules/callback'
 const bot = new Telegraf(secret.botToken)
 
 const docs = (ctx: TelegrafContext) => {
-  ctx.reply('Welcome to @hosymbot! Use inline queries or /search for music.')
+  ctx.reply(
+    'Welcome to @hosymbot! Use inline queries or /search for music.\n<a href="https://github.com/suisei-cn/suisei-music">Music source</a> | <a href="https://github.com/suisei-cn/tg-bot-hoshiyomis">Source code</a>\nBrought to you with ❤️ by <a href="https://github.com/suisei-cn">@suisei-cn</a>',
+    {
+      disable_web_page_preview: true,
+      parse_mode: 'HTML',
+    }
+  )
 }
 
 bot.start(docs)

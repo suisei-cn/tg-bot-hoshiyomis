@@ -20,7 +20,7 @@ export default async (ctx: TelegrafContext) => {
         title: `No results for "${query}".`,
         input_message_content: {
           message_text: getGeneralNotFoundMessage(query),
-          parse_mode: 'Markdown',
+          parse_mode: 'HTML',
           disable_web_page_preview: true,
         },
         url: 'https://github.com/suisei-cn/suisei-music',

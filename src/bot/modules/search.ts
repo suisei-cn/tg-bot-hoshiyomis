@@ -25,7 +25,7 @@ export default async (ctx: TelegrafContext) => {
   const results = await searchMusic(query)
   if (results.length === 0) {
     ctx.reply(getGeneralNotFoundMessage(query), {
-      parse_mode: 'MarkdownV2',
+      parse_mode: 'HTML',
     })
     return
   }
