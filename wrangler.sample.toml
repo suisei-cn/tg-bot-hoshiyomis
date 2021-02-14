@@ -3,6 +3,6 @@ kv_namespaces = [{binding = "KV", id = "kv_id_hex"}]
 name = "hosymbot-worker"
 route = ""
 type = "webpack"
-vars = {BOT_TOKEN = "botid:botkey", DOMAIN = "hosymbot-worker.endpoint.workers.dev", WHITELISTED_HOSTNAMES = "asset.storage.example.com|another.asset.storage.example.com", META_URL = "https://example.com/meta/json/path/meta.json"}
+webpack_config = "webpack.config.js"
 workers_dev = true
 zone_id = ""

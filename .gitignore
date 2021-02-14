@@ -135,3 +135,4 @@ n
 yarn-error.log
 
 wrangler.toml
+src/secrets.ts
