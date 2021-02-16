@@ -64,11 +64,17 @@ index e53961b..71320e3 100644
          headers: { 'content-disposition': `form-data; name="${id}"; filename="${fileName}"` },
 diff --git a/node_modules/telegraf/crypto.patch.js b/node_modules/telegraf/crypto.patch.js
 new file mode 100644
-index 0000000..fe77161
+index 0000000..c8b490e
 --- /dev/null
 +++ b/node_modules/telegraf/crypto.patch.js
-@@ -0,0 +1,12 @@
-+const isNode = new Function('try {return this===global;}catch(e){return false;}')
+@@ -0,0 +1,18 @@
++function isNode() {
++    return (
++      typeof process === 'object' &&
++      typeof process.versions === 'object' &&
++      typeof process.versions.node !== undefined
++    )
++}
 +
 +// this implements crypto.randomBytes(length).toString('hex') in Node.js.
 +module.exports = function randomBytes(length) {

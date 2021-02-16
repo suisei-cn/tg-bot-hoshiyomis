@@ -1,8 +1,12 @@
 import bot from './bot'
 
-const isNode = new Function(
-  'try {return this===global;}catch(e){return false;}'
-)
+function isNode() {
+  return (
+    typeof process === 'object' &&
+    typeof process.versions === 'object' &&
+    typeof process.versions.node !== undefined
+  )
+}
 
 if (isNode()) {
   // @ts-ignore
