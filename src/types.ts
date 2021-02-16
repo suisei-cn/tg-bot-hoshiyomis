@@ -14,3 +14,13 @@ export interface AudioMeta {
   performer: string
   caption: string
 }
+
+export interface AudioResultCached {
+  fileId: string
+}
+
+export interface AudioResultNonCached {
+  url: string
+}
+
+export type AudioResult = AudioResultCached | AudioResultNonCached
