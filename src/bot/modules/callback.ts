@@ -5,6 +5,7 @@ import { musicToAudioMeta } from '~utils/convert'
 import { TelegrafContext } from 'telegraf/typings/context'
 import { saveToCache, tryFetchFromCache } from '../utils/file'
 import { AudioResultCached, AudioResultNonCached } from 'src/types'
+import secrets from 'src/secrets'
 
 export default async (ctx:TelegrafContext) => {
     const cbQuery = ctx.callbackQuery as CallbackQuery
@@ -41,8 +42,7 @@ export default async (ctx:TelegrafContext) => {
       const audioResult = await ctx.telegram.sendAudio(responseChatId, url,
         musicToAudioMeta(music)
       )
-      await saveToCache(url, audioResult.audio.file_id)
+      const fileId = audioResult.document?.file_id
+      if (fileId) await saveToCache(url, fileId)
     }
-  
-    
   }
