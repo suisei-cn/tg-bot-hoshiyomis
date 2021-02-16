@@ -1,0 +1,114 @@
+diff --git a/node_modules/telegraf/core/network/client.js b/node_modules/telegraf/core/network/client.js
+index e53961b..71320e3 100644
+--- a/node_modules/telegraf/core/network/client.js
++++ b/node_modules/telegraf/core/network/client.js
+@@ -1,11 +1,11 @@
+ const debug = require('debug')('telegraf:client')
+ const crypto = require('crypto')
+ const fetch = require('node-fetch').default
+-const fs = require('fs')
+ const https = require('https')
+ const path = require('path')
+ const TelegramError = require('./error')
+ const MultipartStream = require('./multipart-stream')
++const randomBytes = require('../../crypto.patch')
+ const { isStream } = MultipartStream
+ 
+ const WEBHOOK_BLACKLIST = [
+@@ -93,7 +93,7 @@ function buildFormDataConfig (payload, agent) {
+       payload[field] = JSON.stringify(payload[field])
+     }
+   }
+-  const boundary = crypto.randomBytes(32).toString('hex')
++  const boundary = randomBytes(32)
+   const formData = new MultipartStream(boundary)
+   const tasks = Object.keys(payload).map((key) => attachFormValue(formData, key, payload[key], agent))
+   return Promise.all(tasks).then(() => {
+@@ -119,7 +119,7 @@ function attachFormValue (form, id, value, agent) {
+     return Promise.resolve()
+   }
+   if (id === 'thumb') {
+-    const attachmentId = crypto.randomBytes(16).toString('hex')
++    const attachmentId = randomBytes(16)
+     return attachFormMedia(form, value, attachmentId, agent)
+       .then(() => form.addPart({
+         headers: { 'content-disposition': `form-data; name="${id}"` },
+@@ -132,7 +132,7 @@ function attachFormValue (form, id, value, agent) {
+         if (typeof item.media !== 'object') {
+           return Promise.resolve(item)
+         }
+-        const attachmentId = crypto.randomBytes(16).toString('hex')
++        const attachmentId = randomBytes(16)
+         return attachFormMedia(form, item.media, attachmentId, agent)
+           .then(() => ({ ...item, media: `attach://${attachmentId}` }))
+       })
+@@ -142,7 +142,7 @@ function attachFormValue (form, id, value, agent) {
+     }))
+   }
+   if (typeof value.media !== 'undefined' && typeof value.type !== 'undefined') {
+-    const attachmentId = crypto.randomBytes(16).toString('hex')
++    const attachmentId = randomBytes(16)
+     return attachFormMedia(form, value.media, attachmentId, agent)
+       .then(() => form.addPart({
+         headers: { 'content-disposition': `form-data; name="${id}"` },
+@@ -166,10 +166,6 @@ function attachFormMedia (form, media, id, agent) {
+     )
+   }
+   if (media.source) {
+-    if (fs.existsSync(media.source)) {
+-      fileName = media.filename || path.basename(media.source)
+-      media.source = fs.createReadStream(media.source)
+-    }
+     if (isStream(media.source) || Buffer.isBuffer(media.source)) {
+       form.addPart({
+         headers: { 'content-disposition': `form-data; name="${id}"; filename="${fileName}"` },
+diff --git a/node_modules/telegraf/crypto.patch.js b/node_modules/telegraf/crypto.patch.js
+new file mode 100644
+index 0000000..fe77161
+--- /dev/null
++++ b/node_modules/telegraf/crypto.patch.js
+@@ -0,0 +1,12 @@
++const isNode = new Function('try {return this===global;}catch(e){return false;}')
++
++// this implements crypto.randomBytes(length).toString('hex') in Node.js.
++module.exports = function randomBytes(length) {
++    if (isNode()) {
++        return require("crypto").randomBytes(length).toString('hex')
++    } else {
++        const v = new Uint8Array(length)
++        crypto.getRandomValues(v)
++        return [...v].map(x => x.toString(16)).join("")    
++    }
++}
+\ No newline at end of file
+diff --git a/node_modules/telegraf/telegraf.js b/node_modules/telegraf/telegraf.js
+index 23e228e..cd9adba 100644
+--- a/node_modules/telegraf/telegraf.js
++++ b/node_modules/telegraf/telegraf.js
+@@ -9,7 +9,7 @@ const Stage = require('./stage')
+ const BaseScene = require('./scenes/base')
+ const Context = require('./context')
+ const generateCallback = require('./core/network/webhook')
+-const crypto = require('crypto')
++const randomBytes = require('./crypto.patch')
+ const { URL } = require('url')
+ 
+ const DEFAULT_OPTIONS = {
+@@ -117,7 +117,7 @@ class Telegraf extends Composer {
+         if (domain.startsWith('https://') || domain.startsWith('http://')) {
+           domain = new URL(domain).host
+         }
+-        const hookPath = config.webhook.hookPath || `/telegraf/${crypto.randomBytes(32).toString('hex')}`
++        const hookPath = config.webhook.hookPath || `/telegraf/${randomBytes(32)}`
+         const { port, host, tlsOptions, cb } = config.webhook
+         this.startWebhook(hookPath, tlsOptions, port, host, cb)
+         if (!domain) {
+diff --git a/node_modules/telegraf/typings/crypto.patch.d.ts b/node_modules/telegraf/typings/crypto.patch.d.ts
+new file mode 100644
+index 0000000..492847d
+--- /dev/null
++++ b/node_modules/telegraf/typings/crypto.patch.d.ts
+@@ -0,0 +1,2 @@
++export declare function randomBytes(length: number): string
++  
+\ No newline at end of file

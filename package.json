@@ -12,7 +12,8 @@
     "coverage": "jest --collectCoverageFrom=src/**/*.ts --coverage",
     "build": "tsc",
     "build:watch": "tsc -w",
-    "clear": "rimraf dist node_modules coverage worker"
+    "clear": "rimraf dist node_modules coverage worker",
+    "postinstall": "patch-package"
   },
   "keywords": [
     "telegram",
@@ -34,8 +35,11 @@
   "devDependencies": {
     "@cloudflare/workers-types": "^2.1.0",
     "@types/jest": "^24.0.12",
+    "@types/node-fetch": "^2.5.8",
     "jest": "^24.3.0",
+    "node-fetch": "^2.6.1",
     "nodemon": "^1.18.10",
+    "patch-package": "^6.2.2",
     "prettier": "^1.16.4",
     "ts-jest": "^24.0.0",
     "ts-loader": "^8.0.14",
