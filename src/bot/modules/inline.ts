@@ -1,12 +1,15 @@
+import { AudioResultCached } from 'src/types'
 import { TelegrafContext } from 'telegraf/typings/context'
 import {
   InlineQuery,
   InlineQueryResultAudio,
+  InlineQueryResultCachedAudio,
 } from 'telegraf/typings/telegram-types'
 import { musicToAudioMeta } from '~utils/convert'
 import { rand } from '~utils/math'
 import { searchMusic } from '~utils/music'
 import { getGeneralNotFoundMessage } from '~utils/string'
+import { tryFetchFromCache } from '../utils/file'
 
 export default async (ctx: TelegrafContext) => {
   const inlineQuery = ctx.inlineQuery as InlineQuery
@@ -29,15 +32,24 @@ export default async (ctx: TelegrafContext) => {
     return
   }
 
-  const result: InlineQueryResultAudio[] = results.slice(0, 15).map(x => {
-    const meta = musicToAudioMeta(x)
-    return {
-      ...meta,
-      type: 'audio',
-      id: rand(),
-      audio_url: x.url,
-    }
-  })
+  const result: (InlineQueryResultAudio|InlineQueryResultCachedAudio)[] = await Promise.all(
+    results.slice(0, 15).map(async (x) => {
+      const meta = musicToAudioMeta(x)
+      const baseResult = { ...meta, type: 'audio', id: rand() }
+      const result = await tryFetchFromCache(x.url)
+      if ((result as AudioResultCached).fileId) {
+        return {
+          ...baseResult,
+          audio_file_id: (result as AudioResultCached).fileId,
+        }
+      } else {
+        return {
+          ...baseResult,
+          audio_url: x.url,
+        }
+      }
+    })
+  )
 
   ctx.answerInlineQuery(result)
 }
