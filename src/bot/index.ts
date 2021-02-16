@@ -4,6 +4,7 @@ import secret from '../secrets'
 import inlineQueryHandler from '~modules/inline'
 import searchHandler from '~modules/search'
 import callbackQueryHandler from '~modules/callback'
+import { logToSlack } from '~utils/slack'
 
 const bot = new Telegraf(secret.botToken)
 
@@ -25,5 +26,11 @@ bot.on('inline_query', inlineQueryHandler)
 bot.command('search', searchHandler)
 
 bot.on('callback_query', callbackQueryHandler)
+
+bot.catch(async (err: Error, ctx: TelegrafContext) => {
+  await logToSlack(
+    `Ooops, encountered an error for ${ctx.updateType}: ${String(err)}`
+  )
+})
 
 export default bot

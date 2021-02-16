@@ -3,6 +3,5 @@ export default {
   webhook: 'prod',
   botToken: 'botid:botkey',
   metaUrl: 'https://example.com/meta/json/path/meta.json',
-  // sometimes a "-100" prefix is required
-  cacheChat: '-1001024110925',
+  slackUrl: 'https://hooks.slack.com/services/A/B/C',
 }

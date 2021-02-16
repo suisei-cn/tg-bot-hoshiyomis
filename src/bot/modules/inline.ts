@@ -35,7 +35,7 @@ export default async (ctx: TelegrafContext) => {
   const result: (InlineQueryResultAudio|InlineQueryResultCachedAudio)[] = await Promise.all(
     results.slice(0, 15).map(async (x) => {
       const meta = musicToAudioMeta(x)
-      const baseResult = { ...meta, type: 'audio', id: rand() }
+      const baseResult = { ...meta, type: 'audio', id: rand(), audio_url: x.url }
       const result = await tryFetchFromCache(x.url)
       if ((result as AudioResultCached).fileId) {
         return {
@@ -43,13 +43,23 @@ export default async (ctx: TelegrafContext) => {
           audio_file_id: (result as AudioResultCached).fileId,
         }
       } else {
-        return {
-          ...baseResult,
-          audio_url: x.url,
-        }
+        return baseResult
       }
     })
   )
 
-  ctx.answerInlineQuery(result)
+  // It's weird that there will be problems if InlineQueryResultCachedAudio is mixed w/ InlineQueryResultAudio.
+  if (result.filter(x => (x as InlineQueryResultCachedAudio).audio_file_id).length === result.length) {
+    await ctx.answerInlineQuery(result.map(x => {
+      // @ts-ignore
+      x.audio_url = undefined
+      return x
+    }))
+  } else {
+    await ctx.answerInlineQuery(result.map(x => {
+      // @ts-ignore
+      x.audio_file_id = undefined
+      return x
+    }))
+  }
 }
