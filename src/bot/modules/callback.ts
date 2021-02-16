@@ -38,10 +38,7 @@ export default async (ctx:TelegrafContext) => {
       )
     } else {
       const url = (audioCached as AudioResultNonCached).url
-      const audioResult = await ctx.telegram.sendAudio(responseChatId, {
-        url,
-        filename: musicToAudioMeta(music).caption
-      }, 
+      const audioResult = await ctx.telegram.sendAudio(responseChatId, url,
         musicToAudioMeta(music)
       )
       await saveToCache(url, audioResult.audio.file_id)
