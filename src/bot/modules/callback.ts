@@ -9,8 +9,19 @@ import { logToSlack } from '~utils/slack'
 
 export default async (ctx:TelegrafContext) => {
     const cbQuery = ctx.callbackQuery as CallbackQuery
+    const cbDescriptor = `__cbcache_${cbQuery.id}`
     const responseChatId = cbQuery.message?.chat.id
     const hash = cbQuery.data || ''
+
+    if (await KV.get(cbDescriptor)) {
+      // Already read
+      await ctx.answerCbQuery()
+      return
+    }
+
+    await KV.put(cbDescriptor, String(new Date()), {
+      expirationTtl: 300
+    })
   
     if (!hash) {
       await ctx.answerCbQuery()
@@ -25,7 +36,7 @@ export default async (ctx:TelegrafContext) => {
     const music = await queryMusicByHash(hash)
   
     if (music === null) {
-      await   ctx.answerCbQuery('The music is not found.')
+      await ctx.answerCbQuery('The music is not found.')
       return
     }
 
