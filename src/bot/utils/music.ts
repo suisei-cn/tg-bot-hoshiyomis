@@ -3,8 +3,8 @@ import { toRomaji } from 'wanakana'
 import { MusicInfo } from 'src/types'
 import { getHashByUrl } from './string'
 
-async function getMusic(): Promise<MusicInfo[]> {
-  return await fetch(secrets.metaUrl)
+export function getMusic(): Promise<MusicInfo[]> {
+  return fetch(secrets.metaUrl)
     .then(x => x.json())
     .catch(() => {
       return []
