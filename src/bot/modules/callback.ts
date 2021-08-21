@@ -5,7 +5,7 @@ import { musicToAudioMeta } from '~utils/convert'
 import { TelegrafContext } from 'telegraf/typings/context'
 import { saveToCache, tryFetchFromCache } from '~utils/file'
 import { AudioResultCached, AudioResultNonCached } from 'src/types'
-import { logToSlack } from '~utils/slack'
+import { sendLog } from 'src/bot/utils/remotelog'
 
 export default async (ctx:TelegrafContext) => {
     const cbQuery = ctx.callbackQuery as CallbackQuery
@@ -54,11 +54,11 @@ export default async (ctx:TelegrafContext) => {
         musicToAudioMeta(music)
       )
       const fileId = audioResult.document?.file_id || audioResult.audio?.file_id
-      if (fileId){
-        await saveToCache(url, fileId)
+    if (fileId) {
+      await saveToCache(url, fileId, music)
       } else {
-        await logToSlack(`No fileId for ${url}`)
+      await sendLog(`No fileId for ${url}`)
       }
-      await logToSlack(`Saved: ${JSON.stringify(audioResult)}`)
+    await sendLog(`Saved: ${JSON.stringify(audioResult)}`)
     }
   }

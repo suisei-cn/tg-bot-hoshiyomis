@@ -4,7 +4,7 @@ import secret from '../secrets'
 import inlineQueryHandler from '~modules/inline'
 import searchHandler from '~modules/search'
 import callbackQueryHandler from '~modules/callback'
-import { logToSlack } from '~utils/slack'
+import { sendLog } from 'src/bot/utils/remotelog'
 
 const bot = new Telegraf(secret.botToken)
 
@@ -28,7 +28,7 @@ bot.command('search', searchHandler)
 bot.on('callback_query', callbackQueryHandler)
 
 bot.catch(async (err: Error, ctx: TelegrafContext) => {
-  await logToSlack(
+  await sendLog(
     `Ooops, encountered an error for ${ctx.updateType}: ${String(err)}`
   )
 })
