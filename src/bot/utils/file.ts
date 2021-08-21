@@ -16,7 +16,7 @@ export async function saveToCache(
   sendLogRaw({
     '@type': 'MessageCard',
     '@context': 'https://schema.org/extensions',
-    summary: `New entry cached: {fileId}`,
+    summary: `New entry cached: ${fileId}`,
     themeColor: '7bd5eb',
     title: 'New entry cached',
     sections: [
