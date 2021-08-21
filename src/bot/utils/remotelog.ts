@@ -1,14 +1,13 @@
 import secrets from 'src/secrets'
 
-export async function sendLog(text: string) {
+export async function sendLog(text: string, title: string) {
   await fetch(secrets.msWebhookUrl, {
     method: 'POST',
     body: JSON.stringify({
       '@type': 'MessageCard',
       '@context': 'https://schema.org/extensions',
-      summary: `New entry cached: {fileId}`,
       themeColor: '7bd5eb',
-      title: 'New entry cached',
+      title,
       sections: [
         {
           activityTitle: '@hosymbot',
