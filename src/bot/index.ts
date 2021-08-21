@@ -29,7 +29,8 @@ bot.on('callback_query', callbackQueryHandler)
 
 bot.catch(async (err: Error, ctx: TelegrafContext) => {
   await sendLog(
-    `Ooops, encountered an error for ${ctx.updateType}: ${String(err)}`
+    `Ooops, encountered an error for ${ctx.updateType}: ${String(err)}`,
+    'Bot Error'
   )
 })
 

@@ -62,8 +62,8 @@ export default async (ctx: TelegrafContext) => {
     if (fileId) {
       await saveToCache(url, fileId, music)
     } else {
-      await sendLog(`No fileId for ${url}`)
+      await sendLog(`No fileId for ${url}`, 'Bot/Caching')
     }
-    await sendLog(`Saved: ${JSON.stringify(audioResult)}`)
+    await sendLog(`Saved: ${JSON.stringify(audioResult)}`, 'Bot/Caching')
   }
 }
