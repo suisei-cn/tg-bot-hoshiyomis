@@ -16,8 +16,9 @@
     "strict": true,
     "strictNullChecks": true,
     "strictFunctionTypes": true,
-    "lib": ["es6", "webworker"],
+    "lib": ["es2020", "webworker"],
     "resolveJsonModule": true,
+    "forceConsistentCasingInFileNames": true,
     "types": ["@cloudflare/workers-types"],
     "typeRoots": ["node_modules/@types", "index.d.ts"]
   },
@@ -25,5 +26,5 @@
     "src/**/*.ts",
     "./node_modules/@cloudflare/workers-types/index.d.ts"
   ],
-  "exclude": ["node_modules/", "dist/"]
+  "exclude": ["node_modules/", "dist/", "src/util/webhook.ts"]
 }
