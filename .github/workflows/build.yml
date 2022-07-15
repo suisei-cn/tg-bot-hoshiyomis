@@ -14,7 +14,7 @@ jobs:
 
       - name: Pre-build preparations 🔍
         run: |
-          npm ci
+          npm pnpm install
           mv src/secrets.sample.ts src/secrets.ts
           mv wrangler.sample.toml wrangler.toml
 
