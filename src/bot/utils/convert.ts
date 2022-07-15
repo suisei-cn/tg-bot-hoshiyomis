@@ -1,6 +1,11 @@
 import { AudioMeta, MusicInfo } from 'src/types'
 import { getHashByUrl, leftpad } from './string'
 
+const SUISEI_AFFILIATED = [
+  '星街すいせい',
+  'Midnight Grand Orchestra', // https://twitter.com/m_g_orchestra
+]
+
 export function musicToAudioMeta(i: MusicInfo): AudioMeta {
   let dateTime = new Date(i.datetime)
 
@@ -18,7 +23,7 @@ export function musicToAudioMeta(i: MusicInfo): AudioMeta {
         Case 2: !isSuiseiOriginal, isOriginal  | Original, suisei with others, use {performers} - {title}
         Case 3: !isSuiseiOriginal, !isOriginal | Feat only, use {original} - {title} (feat. {performers})
     **/
-  let isSuiseiOriginal = (i.artist || '').includes('星街すいせい')
+  let isSuiseiOriginal = SUISEI_AFFILIATED.includes(i.artist || '')
   let isOriginal = isSuiseiOriginal || i.artist === ''
   return {
     hash: getHashByUrl(i.url),
